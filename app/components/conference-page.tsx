@@ -1,0 +1,593 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { CONFERENCE_PARTNERS } from "../constants/type";
+
+const tracks = [
+  {
+    title: "Statistical Foundations for Reliable AI",
+    description:
+      "Model validation, uncertainty quantification, causal inference, hybrid statistical–ML models, and interpretable AI.",
+    tags: ["Model validation", "Causal inference", "Uncertainty", "Interpretability"],
+  },
+  {
+    title: "AI for Inclusive Growth and Social Impact",
+    description:
+      "Applied AI for health, agriculture, climate resilience, financial inclusion, labour markets, and poverty analysis.",
+    tags: ["Health", "Agriculture", "Climate", "Financial inclusion"],
+  },
+  {
+    title: "Modernizing Official Statistics",
+    description:
+      "Data integration, administrative and big data, governance, institutional readiness, and public trust.",
+    tags: ["Big data", "National statistics", "Governance", "KNBS"],
+  },
+  {
+    title: "Skills, Innovation and the Future Data Workforce",
+    description:
+      "Practical training, student research, industry engagement, mentorship, and reproducible research.",
+    tags: ["Capacity building", "Mentorship", "Innovation", "Student showcase"],
+  },
+];
+
+const milestones = [
+  { date: "February 2026", title: "University committee constituted", state: "complete" },
+  { date: "June 2026", title: "Conference website and registration launched", state: "complete" },
+  { date: "June 2026", title: "Call for abstracts and papers launched", state: "complete" },
+  { date: "15 August 2026", title: "Abstract submission deadline", state: "complete" },
+  { date: "31 August 2026", title: "Speaker and trainer confirmations; sponsor deadline", state: "complete" },
+  { date: "September 2026", title: "Abstract review and author notifications", state: "complete" },
+  { date: "October 2026", title: "Conference programme publication", state: "current" },
+  { date: "31 October 2026", title: "General attendee registration closes", state: "upcoming" },
+  { date: "November 2026", title: "Final venue and delegate preparations", state: "upcoming" },
+  { date: "16 November 2026", title: "Pre-conference preparation day", state: "upcoming" },
+  { date: "17–19 November 2026", title: "SSK International Conference", state: "conference" },
+];
+
+const programme = [
+  {
+    date: "Monday · 16 November",
+    title: "Pre-conference preparation",
+    events: [
+      ["08:00–17:00", "Venue, exhibition and technical setup"],
+      ["All day", "Speaker, trainer and committee briefings"],
+      ["18:00–20:00", "Optional welcome reception for early arrivals"],
+    ],
+  },
+  {
+    date: "Tuesday · 17 November",
+    title: "Opening, practical training and plenaries",
+    events: [
+      ["08:00–09:45", "Delegate registration and official opening ceremony"],
+      ["10:00–12:45", "Four parallel hands-on student training tracks"],
+      ["13:45–14:30", "Plenary: statistics as the foundation of trustworthy AI"],
+      ["14:30–17:30", "Responsible AI, official statistics and applied AI sessions"],
+    ],
+  },
+  {
+    date: "Wednesday · 18 November",
+    title: "Africa Statistics Day and research presentations",
+    events: [
+      ["09:00–12:30", "Joint KNBS Africa Statistics Day session and policy dialogue"],
+      ["12:30–13:30", "Lunch, poster and exhibition viewing"],
+      ["13:30–15:30", "Peer-reviewed paper presentations across parallel tracks"],
+      ["15:45–17:15", "Student innovation showcase and poster session"],
+    ],
+  },
+  {
+    date: "Thursday · 19 November",
+    title: "Regional roadmap, awards and closing",
+    events: [
+      ["09:00–12:30", "Plenary sessions and policy roundtables"],
+      ["13:30–15:30", "Sustainable data and AI ecosystem roadmap"],
+      ["15:45–17:30", "Student and research awards, conference resolutions and closing"],
+    ],
+  },
+];
+
+const feeOptions = [
+  { category: "Student", fee: "KES 3,000", daily: "KES 1,000/day", note: "Valid student ID or proof of enrolment required." },
+  { category: "SSK member", fee: "KES 7,000", daily: "KES 3,000/day", note: "Proof of current SSK membership required." },
+  { category: "Professional", fee: "KES 12,000", daily: "KES 5,000/day", note: "For government, NGO, academic and private-sector delegates." },
+  { category: "International", fee: "USD 150", daily: "USD 70/day", note: "For delegates travelling from outside Kenya." },
+];
+
+const committees = [
+  {
+    name: "Statistical Society of Kenya",
+    role: "Lead organizer",
+    members: [
+      ["Geofrey Oduwo", "Conference Chair · Chairperson, SSK"],
+      ["Obwoge Frankline Keraro", "Conference Organizer · SSK Regional Coordinator, Eastern Kenya"],
+      ["SSK Secretariat", "Conference coordination"],
+      ["Scientific Committee", "Abstract review and programme design"],
+    ],
+  },
+  {
+    name: "University of Embu",
+    role: "Host institution",
+    members: [
+      ["Dr. Edwine Benson Atitwa", "Chair, Department of Mathematics and Statistics"],
+      ["University scientific committee", "Scientific programme and abstract vetting"],
+      ["Directorate of Research", "Research linkages and proceedings"],
+      ["University representatives", "Media, ICT, events and student affairs"],
+    ],
+  },
+  {
+    name: "Kenya National Bureau of Statistics",
+    role: "Strategic partner",
+    members: [
+      ["Mr. Benjamin Avusevwa", "Director, Statistical Coordination and Methods · Partnership Lead"],
+      ["KNBS technical team", "Technical input and statistical coordination"],
+      ["Africa Statistics Day desk", "Joint celebrations and programme"],
+      ["Participant engagement team", "Knowledge dissemination and outreach"],
+    ],
+  },
+];
+
+const pageTitles: Record<string, { eyebrow: string; title: string; description: string }> = {
+  about: {
+    eyebrow: "About the conference",
+    title: "Statistics, machine learning and AI for sustainable development",
+    description: "The inaugural flagship conference of the Statistical Society of Kenya, hosted at the University of Embu in strategic partnership with KNBS.",
+  },
+  themes: {
+    eyebrow: "Scientific programme",
+    title: "Conference sub-themes",
+    description: "Four interconnected tracks connect statistical theory with practical applications across Kenya and the African continent.",
+  },
+  programme: {
+    eyebrow: "Schedule",
+    title: "Conference programme",
+    description: "A three-day programme of practical training, research presentations, policy dialogue, and networking, aligned with Africa Statistics Day.",
+  },
+  speakers: {
+    eyebrow: "Invited speakers",
+    title: "Keynote speakers and facilitators",
+    description: "Speakers are listed in the programme only after they confirm their attendance.",
+  },
+  dates: {
+    eyebrow: "Important milestones",
+    title: "Key dates",
+    description: "Abstract and planning milestones alongside the registration deadline and conference dates.",
+  },
+  cfp: {
+    eyebrow: "Submit your research",
+    title: "Call for abstracts and papers",
+    description: "Original theoretical and applied research on statistics, machine learning, and AI for sustainable development.",
+  },
+  partners: {
+    eyebrow: "Collaboration",
+    title: "Principal partners",
+    description: "The conference is convened by the Statistical Society of Kenya, hosted by the University of Embu, and held in strategic partnership with KNBS.",
+  },
+  venue: {
+    eyebrow: "Location",
+    title: "University of Embu",
+    description: "The host institution for the SSK Inaugural International Conference, located in Embu County at the foot of Mount Kenya.",
+  },
+  contact: {
+    eyebrow: "Get in touch",
+    title: "Contact the conference secretariat",
+    description: "For conference, registration, abstract, accommodation, partnership, and sponsorship enquiries, contact the SSK team.",
+  },
+  sponsors: {
+    eyebrow: "Partner with us",
+    title: "Sponsorship and exhibition",
+    description: "Sponsorship and exhibition opportunities listed in the conference information. Contact the secretariat to confirm current availability.",
+  },
+  register: {
+    eyebrow: "Registration",
+    title: "Conference registration fees",
+    description: "Fees cover three-day attendance, conference materials, delegate pack, and daily meals. Daily rates are also listed; accommodation is separate.",
+  },
+  organizers: {
+    eyebrow: "Organizing team",
+    title: "Conference organizing committees",
+    description: "The conference is jointly organized by SSK, the University of Embu, and the Kenya National Bureau of Statistics.",
+  },
+  eticket: {
+    eyebrow: "Digital access",
+    title: "E-ticket and gate pass information",
+    description: "Registration and delegate access are managed through the official conference portal. This website does not create or verify gate passes.",
+  },
+};
+
+export const CONFERENCE_PAGE_SLUGS = Object.keys(pageTitles);
+
+function PageIntro({ slug }: { slug: string }) {
+  const page = pageTitles[slug];
+  if (!page) notFound();
+
+  return (
+    <header className="content-page-intro">
+      <p className="content-eyebrow">{page.eyebrow}</p>
+      <h1>{page.title}</h1>
+      <p className="content-page-lead">{page.description}</p>
+    </header>
+  );
+}
+
+function AboutContent() {
+  const highlights = [
+    ["Keynote addresses", "Insights from academics, policymakers, and practitioners working with statistics, machine learning, and AI for development."],
+    ["Peer-reviewed research", "Original research across four thematic tracks, reviewed by a multidisciplinary scientific committee."],
+    ["Hands-on training", "Practical workshops in statistical ML, AI policy, official statistics modernization, and reproducible research."],
+    ["Student innovation", "A showcase and mentorship platform for emerging statisticians and data scientists, with research and innovation awards."],
+    ["Policy dialogue", "Roundtables connecting government, academia, industry, and development partners around evidence-based policy."],
+    ["Regional collaboration", "A gathering for Kenya, East Africa, and the wider international statistics and data science community."],
+  ];
+
+  return (
+    <>
+      <section className="content-section about-copy">
+        <p>The conference brings together statisticians, data scientists, policymakers, government institutions, development partners, industry innovators, and students from Kenya, Africa, and beyond to exchange knowledge, build skills, and develop collaborations.</p>
+        <p>As data reshapes how governments design policy, allocate resources, and monitor development, statistics provide an essential foundation for trustworthy AI and evidence-based decision-making.</p>
+        <p>The conference advances data literacy, responsible AI, and capacity building in support of Kenya’s Vision 2030 and the United Nations Sustainable Development Goals.</p>
+        <figure className="about-photo">
+          <Image src="/images/conference-collaboration.png" alt="Illustrative East African students and researchers sharing ideas" fill sizes="(max-width: 800px) 100vw, 800px" />
+          <figcaption>Illustrative conference photography · Research, learning and collaboration</figcaption>
+        </figure>
+        <div className="partner-logo-row">
+          {CONFERENCE_PARTNERS.map((partner) => (
+            <div className="partner-logo-card" key={partner.name}>
+              <Image src={partner.src} alt={partner.name} width={160} height={72} />
+              <span>{partner.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className="content-section">
+        <div className="section-heading-block">
+          <p className="content-eyebrow">What to expect</p>
+          <h2>Research, practice and collaboration</h2>
+        </div>
+        <div className="feature-grid">
+          {highlights.map(([title, description]) => (
+            <article className="content-card feature-card" key={title}>
+              <h3>{title}</h3><p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function ThemesContent() {
+  return (
+    <section className="content-section">
+      <div className="theme-grid">
+        {tracks.map((track, index) => (
+          <article className="content-card theme-content-card" key={track.title}>
+            <p className="card-kicker">Sub-theme {String(index + 1).padStart(2, "0")}</p>
+            <h2>{track.title}</h2>
+            <p>{track.description}</p>
+            <ul className="tag-list">
+              {track.tags.map((tag) => <li key={tag}>{tag}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <aside className="callout callout-warm">
+        <strong>Cross-cutting focus:</strong> ethics, data governance, fairness, responsible AI, and privacy across all tracks.
+      </aside>
+      <p className="content-actions"><Link className="text-link" href="/cfp">Read the call for papers <span aria-hidden="true">→</span></Link></p>
+    </section>
+  );
+}
+
+function DatesContent() {
+  return (
+    <section className="content-section">
+      <div className="timeline-list">
+        {milestones.map((item) => (
+          <article className={`timeline-card timeline-${item.state}`} key={item.title}>
+            <p>{item.date}</p><h2>{item.title}</h2>
+            <span>{item.state === "complete" ? "Past milestone" : item.state === "current" ? "Scheduled this month" : item.state === "conference" ? "Conference" : "Upcoming"}</span>
+          </article>
+        ))}
+      </div>
+      <aside className="callout callout-warm">
+        The abstract deadline listed in the conference information was 15 August 2026. For late-submission enquiries, contact the secretariat.
+      </aside>
+    </section>
+  );
+}
+
+function CallForPapersContent() {
+  const steps = [
+    ["Prepare an abstract", "The conference information requests a structured abstract of 300–500 words, with title, authors, institution, keywords, and selected sub-theme."],
+    ["Submit online", "The original submission portal is linked below. The published deadline was 15 August 2026."],
+    ["Peer review", "The scientific committee planned double-blind review, with author notifications in September 2026."],
+    ["Full paper and presentation", "Accepted authors were invited to submit full papers during September–October for presentation and proceedings consideration."],
+  ];
+
+  return (
+    <section className="content-section">
+      <div className="callout callout-warm deadline-callout">
+        <div><p className="card-kicker">Published deadline</p><strong>15 August 2026</strong></div>
+        <p>The abstract submission deadline has passed. Contact the conference secretariat for any late-submission or review enquiries.</p>
+      </div>
+      <div className="content-two-column">
+        <div>
+          <h2>Original research contributions</h2>
+          <p>The SSK International Conference invites theoretical and applied contributions advancing statistics, machine learning, and AI for sustainable development, from researchers, practitioners, and students in Kenya and internationally.</p>
+          <h3>Submission tracks</h3>
+          <ul className="check-list">{tracks.map((track) => <li key={track.title}>{track.title}</li>)}</ul>
+          <a className="conference-btn conference-btn-outline" href="https://portal.sskenya.org/2026-conference-abstract-submission" target="_blank" rel="noreferrer">Check the official portal ↗</a>
+        </div>
+        <div className="process-list">
+          {steps.map(([title, text], index) => (
+            <article className="process-step" key={title}><span>{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProgrammeContent() {
+  return (
+    <section className="content-section">
+      <div className="callout callout-blue">Programme outline from the conference planning material. Session details and speakers may be updated by the organizers.</div>
+      <div className="programme-list">
+        {programme.map((day) => (
+          <details className="programme-day" key={day.date}>
+            <summary><span><small>{day.date}</small><strong>{day.title}</strong></span><span className="programme-toggle" aria-hidden="true">+</span></summary>
+            <ol>
+              {day.events.map(([time, title]) => <li key={time + title}><time>{time}</time><span>{title}</span></li>)}
+            </ol>
+          </details>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SpeakersContent() {
+  // Add a speaker here only after attendance has been confirmed by the organizer.
+  const confirmedSpeakers: { name: string; role: string; topic: string }[] = [];
+
+  return (
+    <section className="content-section">
+      <div className="callout callout-blue">Only speakers who have confirmed their attendance will be published in the programme.</div>
+      {confirmedSpeakers.length ? <div className="speaker-grid">
+        {confirmedSpeakers.map((speaker) => (
+          <article className="content-card speaker-card" key={speaker.name}>
+            <p className="card-kicker">Confirmed speaker</p><h2>{speaker.name}</h2><p>{speaker.role}</p><p>{speaker.topic}</p>
+          </article>
+        ))}
+      </div> : <article className="content-card speaker-empty"><h2>Speaker announcements are coming soon</h2><p>Confirmed names and session details will appear here after attendance is verified.</p></article>}
+      <p className="content-actions">Interested in speaking? <Link className="text-link" href="/contact">Contact the conference team →</Link></p>
+    </section>
+  );
+}
+
+function PartnersContent() {
+  const descriptions: Record<string, [string, string, string]> = {
+    "Kenya National Bureau of Statistics": ["Strategic partner", "Kenya’s principal government agency for official statistics, partnering on the Africa Statistics Day celebration and the national data ecosystem.", "https://www.knbs.or.ke"],
+    "Statistical Society of Kenya": ["Convener and organizer", "The professional home of statisticians in Kenya, convening the conference to advance statistical science and evidence-based development.", "https://www.sskenya.org"],
+    "University of Embu": ["Host institution", "A center of academic excellence in science, technology, and applied research, hosting the conference on its campus.", "https://embuni.ac.ke"],
+  };
+
+  return (
+    <section className="content-section">
+      <div className="partner-card-grid">
+        {CONFERENCE_PARTNERS.map((partner) => {
+          const [role, description, url] = descriptions[partner.name];
+          return (
+            <article className="content-card principal-partner-card" key={partner.name}>
+              <div className="principal-partner-logo"><Image src={partner.src} alt={partner.name} width={180} height={100} /></div>
+              <p className="card-kicker">{role}</p><h2>{partner.name}</h2><p>{description}</p>
+              <a className="text-link" href={url} target="_blank" rel="noreferrer">Visit organization ↗</a>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function RegisterContent() {
+  return (
+    <section className="content-section">
+      <p className="section-copy">Full-conference fees cover three-day attendance, conference materials, a delegate pack, and daily meals. Daily rates are available. Accommodation is arranged separately.</p>
+      <div className="fee-grid">
+        {feeOptions.map((fee, index) => (
+          <article className={`content-card fee-card${index === 1 ? " fee-card-featured" : ""}`} key={fee.category}>
+            <p className="card-kicker">{fee.category}</p><h2>{fee.fee}</h2><p className="fee-daily">{fee.daily}</p>
+            <ul className="check-list"><li>Three-day conference access</li><li>Delegate pack and materials</li><li>Daily meals</li><li>Sessions and workshops</li><li>Certificate of participation</li></ul>
+            <p className="fee-note">{fee.note}</p>
+          </article>
+        ))}
+      </div>
+      <div className="callout callout-warm registration-deadline">
+        <div><p className="card-kicker">Registration deadline</p><strong>31 October 2026</strong></div>
+        <a className="conference-btn conference-btn-primary" href="https://portal.sskenya.org/2026-conference-registration" target="_blank" rel="noreferrer">Register through SSK portal ↗</a>
+      </div>
+      <article className="content-card accommodation-card">
+        <p className="card-kicker">Stay in Embu</p><h2>Recommended accommodation</h2>
+        <p>Accommodation is not included in registration. The previous conference information recommends booking directly with hotels in Embu and contacting the secretariat for assistance.</p>
+        <ul className="tag-list"><li>Isaac Walton Inn Embu</li><li>The Marvel Hotel</li><li>Winer Villa Hotel</li></ul>
+        <Link className="text-link" href="/venue">Venue and accommodation information →</Link>
+      </article>
+    </section>
+  );
+}
+
+function SponsorsContent() {
+  const tiers = [
+    ["Title", "KES 1,500,000", "1 available in the published package"],
+    ["Platinum", "KES 1,000,000", "2 available in the published package"],
+    ["Gold", "KES 500,000", "3 available in the published package"],
+    ["Silver", "KES 250,000", "4 available in the published package"],
+  ];
+  const registrationSteps = [
+    "Email the secretariat with your organization and preferred sponsorship tier.",
+    "The published process says SSK will send a sponsorship agreement and invoice.",
+    "Provide a high-resolution organization logo and a profile of up to 100 words.",
+    "Pay using the bank or M-Pesa details on the official invoice.",
+    "Send names and email addresses for any included delegate passes.",
+  ];
+  return (
+    <section className="content-section">
+      <div className="callout callout-warm">The published sponsor confirmation deadline was 31 August 2026. Contact SSK to confirm whether any opportunities remain available.</div>
+      <h2>Principal sponsorship</h2>
+      <div className="sponsor-tier-grid">
+        {tiers.map(([name, price, availability]) => <article className="content-card sponsor-tier-card" key={name}><p className="card-kicker">{name} sponsor</p><h3>{price}</h3><p>{availability}</p></article>)}
+      </div>
+      <div className="content-two-column sponsor-exhibition">
+        <article className="content-card"><p className="card-kicker">Exhibition</p><h2>Standard booth · KES 50,000</h2><ul className="check-list"><li>Exhibition table, two chairs and branded booth space</li><li>Two exhibitor passes with daily meals</li><li>Programme listing and access to all three days</li></ul></article>
+        <article className="content-card"><p className="card-kicker">Exhibition</p><h2>Premium booth · KES 100,000</h2><ul className="check-list"><li>Larger booth near the plenary entrance</li><li>Three exhibitor passes with daily meals</li><li>Programme logo and a five-minute innovation pitch</li></ul></article>
+      </div>
+      <div className="content-two-column sponsor-exhibition sponsor-related-grid">
+        <article className="content-card" id="student">
+          <p className="card-kicker">Access to opportunity</p><h2>Sponsor a Student</h2>
+          <p>Help a student take part in the conference. Contact the secretariat to discuss a contribution and the student support process.</p>
+          <a className="conference-btn conference-btn-primary sponsor-student-button" href="mailto:conference@sskenya.org?subject=Sponsor%20a%20Student">Sponsor a Student <span aria-hidden="true">↗</span></a>
+        </article>
+        <article className="content-card" id="datathon">
+          <p className="card-kicker">Related programme</p><h2>DataThon sponsorship</h2>
+          <p>Support the conference DataThon as a sponsor or partner. Contact the secretariat for the format, participation details, and available options.</p>
+          <a className="text-link" href="mailto:conference@sskenya.org?subject=DataThon%20sponsorship">Enquire about the DataThon →</a>
+        </article>
+      </div>
+      <div className="content-two-column sponsor-exhibition">
+        <article className="content-card">
+          <p className="card-kicker">Additional opportunities</p><h2>Support a specific programme area</h2>
+          <ul className="check-list"><li>Awards sponsor · KES 100,000</li><li>Workshop track sponsor · KES 150,000 per track</li><li>Meals sponsor · KES 300,000</li><li>Delegate bag sponsor · KES 200,000</li></ul>
+        </article>
+        <article className="content-card">
+          <p className="card-kicker">Published sponsor process</p><h2>How to enquire</h2>
+          <ol className="number-list">{registrationSteps.map((step) => <li key={step}>{step}</li>)}</ol>
+          <p className="fee-note">The published sponsor confirmation deadline was 31 August 2026. Included delegate names were due by 31 October 2026.</p>
+        </article>
+      </div>
+      <div className="callout callout-blue sponsor-contact">
+        <p>To ask whether sponsorship or booth opportunities remain, email <a href="mailto:conference@sskenya.org">conference@sskenya.org</a> or call <a href="tel:+254739639425">+254 739 639 425</a>.</p>
+        <a className="conference-btn conference-btn-outline" href="https://portal.sskenya.org/2026-conference-sponsorship" target="_blank" rel="noreferrer">Check the official sponsor portal ↗</a>
+      </div>
+    </section>
+  );
+}
+
+function VenueContent() {
+  const facilities = [
+    "Main auditorium for plenary sessions (300+ capacity)",
+    "Parallel rooms for paper presentations",
+    "Computer labs for practical workshops",
+    "Exhibition space for sponsors and partners",
+    "High-speed Wi-Fi, AV and campus catering facilities",
+  ];
+  return (
+    <section className="content-section">
+      <div className="venue-photo-banner">
+        <Image src="/media/embu-main.jpg" alt="Main entrance and grounds of the University of Embu" fill sizes="(max-width: 1100px) 100vw, 1160px" priority />
+        <div><p className="card-kicker">Conference venue</p><h2>Welcome to Embu</h2><p>University of Embu · 17–19 November 2026</p></div>
+      </div>
+      <div className="venue-grid">
+        <article className="content-card venue-card">
+          <p className="card-kicker">Host institution</p><h2>University of Embu</h2>
+          <p>P.O. Box 6-60100, Embu, Kenya. Use the venue guide below to plan your visit.</p>
+          <div className="venue-infographic-grid">{facilities.map((facility, index) => <article key={facility}><span>{String(index + 1).padStart(2, "0")}</span><p>{facility}</p></article>)}</div>
+          <a className="conference-btn conference-btn-outline" href="https://www.google.com/maps/search/?api=1&query=University+of+Embu%2C+Embu%2C+Kenya" target="_blank" rel="noreferrer">Open directions ↗</a>
+        </article>
+        <article className="venue-map-card">
+          <iframe src="https://www.google.com/maps?q=University+of+Embu,+Embu,+Kenya&z=15&output=embed" title="Map showing the University of Embu" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+        </article>
+      </div>
+      <div className="facts-grid">
+        <article><strong>~120 km</strong><span>From Nairobi CBD</span></article>
+        <article><strong>~2 hours</strong><span>Drive from Nairobi</span></article>
+        <article><strong>5,400+</strong><span>University students</span></article>
+        <article><strong>ISO 9001</strong><span>Certified university</span></article>
+      </div>
+      <article className="content-card accommodation-card"><p className="card-kicker">Accommodation assistance</p><h2>Plan your stay</h2><p>Accommodation is separate from registration. Contact the secretariat for guidance on options and rates; early booking is recommended.</p><p><a href="tel:+254727026670">+254 727 026 670</a> · <a href="mailto:conference@sskenya.org">conference@sskenya.org</a></p></article>
+    </section>
+  );
+}
+
+function ContactContent() {
+  const contactItems = [
+    ["Organizer", "Statistical Society of Kenya (SSK)", "Nyayo House, 18th Floor, Nairobi, Kenya · P.O. Box 62000-00200"],
+    ["General enquiries", "conference@sskenya.org", "Conference enquiries, partnerships, sponsorship, registration and accommodation."],
+    ["Conference coordinator", "rc_eastern@sskenya.org", "Obwoge Frankline Keraro · Regional Coordinator, Eastern Kenya"],
+    ["Phone", "+254 739 639 425", "+254 725 817 836 · +254 727 026 670"],
+    ["Venue", "University of Embu", "P.O. Box 6-60100, Embu, Kenya"],
+  ];
+  return (
+    <section className="content-section">
+      <div className="contact-card-grid">
+        {contactItems.map(([label, value, note]) => (
+          <article className="content-card contact-card" key={label}>
+            <p className="card-kicker">{label}</p>
+            {label === "General enquiries" || label === "Conference coordinator" ? <a href={`mailto:${value}`}>{value}</a> : label === "Phone" ? <a href="tel:+254739639425">{value}</a> : <h2>{value}</h2>}
+            <p>{note}</p>
+          </article>
+        ))}
+      </div>
+      <div className="callout callout-blue">The previous site included a message form connected to a PHP endpoint that is not part of this Next.js project. Email the secretariat directly so your enquiry reaches the team.</div>
+    </section>
+  );
+}
+
+function OrganizersContent() {
+  return (
+    <section className="content-section">
+      <div className="committee-grid">
+        {committees.map((committee) => (
+          <article className="content-card committee-card" key={committee.name}>
+            <p className="card-kicker">{committee.role}</p><h2>{committee.name}</h2>
+            <ul>{committee.members.map(([name, role]) => <li key={name}><strong>{name}</strong><span>{role}</span></li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function EticketContent() {
+  return (
+    <section className="content-section content-narrow">
+      <div className="callout callout-warm"><strong>Use the official registration portal.</strong> The previous site described local ticket generation and gate-pass verification, but this Next.js site has no ticketing or verification backend. It must not create or claim to validate passes.</div>
+      <article className="content-card">
+        <h2>After registering</h2>
+        <ol className="number-list"><li>Complete registration through the SSK conference portal.</li><li>Keep the confirmation and any e-ticket issued by the portal.</li><li>For ticket access or registration help, contact <a href="mailto:conference@sskenya.org">conference@sskenya.org</a>.</li></ol>
+        <a className="conference-btn conference-btn-primary" href="https://portal.sskenya.org/2026-conference-registration" target="_blank" rel="noreferrer">Open registration portal ↗</a>
+      </article>
+    </section>
+  );
+}
+
+export default function ConferencePage({ slug }: { slug: string }) {
+  const page = pageTitles[slug];
+  if (!page) notFound();
+
+  let content;
+  switch (slug) {
+    case "about": content = <AboutContent />; break;
+    case "themes": content = <ThemesContent />; break;
+    case "programme": content = <ProgrammeContent />; break;
+    case "speakers": content = <SpeakersContent />; break;
+    case "dates": content = <DatesContent />; break;
+    case "cfp": content = <CallForPapersContent />; break;
+    case "partners": content = <PartnersContent />; break;
+    case "venue": content = <VenueContent />; break;
+    case "contact": content = <ContactContent />; break;
+    case "sponsors": content = <SponsorsContent />; break;
+    case "register": content = <RegisterContent />; break;
+    case "organizers": content = <OrganizersContent />; break;
+    case "eticket": content = <EticketContent />; break;
+    default: notFound();
+  }
+
+  return (
+    <main className={`content-page content-page-${slug}`}>
+      <div className="conference-container">
+        <PageIntro slug={slug} />
+        {content}
+      </div>
+    </main>
+  );
+}
