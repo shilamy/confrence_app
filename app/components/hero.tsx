@@ -3,7 +3,6 @@ import Countdown from "./Countdown";
 import HeroVideo from "./hero-video";
 import { CONFERENCE_DETAILS } from "../constants/type";
 
-/* ---------- local presentational helpers ---------- */
 
 function CalendarIcon() {
   return (
@@ -36,11 +35,11 @@ export default function Hero() {
           <p className="hero-kicker">
             <span className="hero-kicker-year">’26</span>
             <span className="hero-kicker-rule" aria-hidden="true" />
-            <span>SSK International Conference</span>
+            <span>NATIONAL STATISTICS CONFERENCE</span>
           </p>
 
           <h1 className="hero-title">
-            Strengthening evidence
+            Strengthening evidence{" "}
             <br className="hero-title-break" />
             <span className="hero-title-accent">for sustainable development.</span>
           </h1>

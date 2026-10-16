@@ -73,7 +73,7 @@ export const CONFERENCE_STATS: Statistic[] = [
   {
     value: "30+",
     label: "Partner institutions",
-    description: "A growing network of collaborators",
+    description: "Institutions partnering with the three conference organizers",
   },
 ];
 

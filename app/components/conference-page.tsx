@@ -2,32 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CONFERENCE_PARTNERS } from "../constants/type";
+import ScheduleExplorer from "./schedule-explorer";
+import RegistrationDeadlineDialog from "./registration-deadline-dialog";
 
-const tracks = [
-  {
-    title: "Statistical Foundations for Reliable AI",
-    description:
-      "Model validation, uncertainty quantification, causal inference, hybrid statistical–ML models, and interpretable AI.",
-    tags: ["Model validation", "Causal inference", "Uncertainty", "Interpretability"],
-  },
-  {
-    title: "AI for Inclusive Growth and Social Impact",
-    description:
-      "Applied AI for health, agriculture, climate resilience, financial inclusion, labour markets, and poverty analysis.",
-    tags: ["Health", "Agriculture", "Climate", "Financial inclusion"],
-  },
-  {
-    title: "Modernizing Official Statistics",
-    description:
-      "Data integration, administrative and big data, governance, institutional readiness, and public trust.",
-    tags: ["Big data", "National statistics", "Governance", "KNBS"],
-  },
-  {
-    title: "Skills, Innovation and the Future Data Workforce",
-    description:
-      "Practical training, student research, industry engagement, mentorship, and reproducible research.",
-    tags: ["Capacity building", "Mentorship", "Innovation", "Student showcase"],
-  },
+const subThemes = [
+  { number: 2, title: "Assuring Sustainable Water Availability and Safe Sanitation Systems to Achieve the Goals of Agenda 2063." },
+  { number: 3, title: "Leveraging Machine Learning and Artificial Intelligence to Strengthen Water and Sanitation Statistics for Sustainable Development and Agenda 2063" },
+  { number: 4, title: "Data Quality Assurance and Statistical Standards: Integration of Big Data, Geospatial Data, Citizen-Generated Data, and Administrative Data in Official Statistics" },
+  { number: 5, title: "Data Governance, Ethics, Privacy, and Responsible AI." },
+  { number: 6, title: "Innovation in Census and Survey Methodologies" },
+  { number: 7, title: "Open Data, Data Visualisation, and Communication of Statistics" },
+  { number: 8, title: "Partnerships for Statistical Innovation." },
 ];
 
 const milestones = [
@@ -42,47 +27,6 @@ const milestones = [
   { date: "November 2026", title: "Final venue and delegate preparations", state: "upcoming" },
   { date: "16 November 2026", title: "Pre-conference preparation day", state: "upcoming" },
   { date: "17–19 November 2026", title: "SSK International Conference", state: "conference" },
-];
-
-const programme = [
-  {
-    date: "Monday · 16 November",
-    title: "Pre-conference preparation",
-    events: [
-      ["08:00–17:00", "Venue, exhibition and technical setup"],
-      ["All day", "Speaker, trainer and committee briefings"],
-      ["18:00–20:00", "Optional welcome reception for early arrivals"],
-    ],
-  },
-  {
-    date: "Tuesday · 17 November",
-    title: "Opening, practical training and plenaries",
-    events: [
-      ["08:00–09:45", "Delegate registration and official opening ceremony"],
-      ["10:00–12:45", "Four parallel hands-on student training tracks"],
-      ["13:45–14:30", "Plenary: statistics as the foundation of trustworthy AI"],
-      ["14:30–17:30", "Responsible AI, official statistics and applied AI sessions"],
-    ],
-  },
-  {
-    date: "Wednesday · 18 November",
-    title: "Africa Statistics Day and research presentations",
-    events: [
-      ["09:00–12:30", "Joint KNBS Africa Statistics Day session and policy dialogue"],
-      ["12:30–13:30", "Lunch, poster and exhibition viewing"],
-      ["13:30–15:30", "Peer-reviewed paper presentations across parallel tracks"],
-      ["15:45–17:15", "Student innovation showcase and poster session"],
-    ],
-  },
-  {
-    date: "Thursday · 19 November",
-    title: "Regional roadmap, awards and closing",
-    events: [
-      ["09:00–12:30", "Plenary sessions and policy roundtables"],
-      ["13:30–15:30", "Sustainable data and AI ecosystem roadmap"],
-      ["15:45–17:30", "Student and research awards, conference resolutions and closing"],
-    ],
-  },
 ];
 
 const feeOptions = [
@@ -127,19 +71,19 @@ const committees = [
 
 const pageTitles: Record<string, { eyebrow: string; title: string; description: string }> = {
   about: {
-    eyebrow: "About the conference",
-    title: "Statistics, machine learning and AI for sustainable development",
-    description: "The inaugural flagship conference of the Statistical Society of Kenya, hosted at the University of Embu in strategic partnership with KNBS.",
+    eyebrow: "About the Conference",
+    title: "Africa's Premier Statistics, ML & AI Gathering",
+    description: "",
   },
   themes: {
-    eyebrow: "Scientific programme",
-    title: "Conference sub-themes",
-    description: "Four interconnected tracks connect statistical theory with practical applications across Kenya and the African continent.",
+    eyebrow: "Programme",
+    title: "Conference themes",
+    description: "The main theme and seven sub-themes guiding the conference.",
   },
   programme: {
     eyebrow: "Schedule",
     title: "Conference programme",
-    description: "A three-day programme of practical training, research presentations, policy dialogue, and networking, aligned with Africa Statistics Day.",
+    description: "Explore the programme by day, then use the schedule finder to search sessions and build a personal itinerary.",
   },
   speakers: {
     eyebrow: "Invited speakers",
@@ -203,7 +147,7 @@ function PageIntro({ slug }: { slug: string }) {
     <header className="content-page-intro">
       <p className="content-eyebrow">{page.eyebrow}</p>
       <h1>{page.title}</h1>
-      <p className="content-page-lead">{page.description}</p>
+      {page.description && <p className="content-page-lead">{page.description}</p>}
     </header>
   );
 }
@@ -211,8 +155,8 @@ function PageIntro({ slug }: { slug: string }) {
 function AboutContent() {
   const highlights = [
     ["Keynote addresses", "Insights from academics, policymakers, and practitioners working with statistics, machine learning, and AI for development."],
-    ["Peer-reviewed research", "Original research across four thematic tracks, reviewed by a multidisciplinary scientific committee."],
-    ["Hands-on training", "Practical workshops in statistical ML, AI policy, official statistics modernization, and reproducible research."],
+    ["Peer-reviewed research", "Original research across the conference sub-themes, reviewed by a multidisciplinary scientific committee."],
+    ["Hands-on training", "Practical learning in statistical ML, AI policy, official statistics modernization, and reproducible research."],
     ["Student innovation", "A showcase and mentorship platform for emerging statisticians and data scientists, with research and innovation awards."],
     ["Policy dialogue", "Roundtables connecting government, academia, industry, and development partners around evidence-based policy."],
     ["Regional collaboration", "A gathering for Kenya, East Africa, and the wider international statistics and data science community."],
@@ -221,23 +165,24 @@ function AboutContent() {
   return (
     <>
       <section className="content-section about-copy">
-        <p>The conference brings together statisticians, data scientists, policymakers, government institutions, development partners, industry innovators, and students from Kenya, Africa, and beyond to exchange knowledge, build skills, and develop collaborations.</p>
-        <p>As data reshapes how governments design policy, allocate resources, and monitor development, statistics provide an essential foundation for trustworthy AI and evidence-based decision-making.</p>
-        <p>The conference advances data literacy, responsible AI, and capacity building in support of Kenya’s Vision 2030 and the United Nations Sustainable Development Goals.</p>
+        <p>
+          The <strong>International Conference on Strengthening Evidence for Sustainable Development through Statistics, Machine Learning, and AI</strong> is the inaugural flagship conference of the Statistical Society of Kenya (SSK), hosted at the University of Embu, Kenya.
+        </p>
+        <p>
+          Held in strategic partnership with the Kenya National Bureau of Statistics (KNBS) and jointly commemorating Africa Statistics Day, this landmark three-day event brings together statisticians, data scientists, policymakers, government institutions, development partners, industry innovators, and students from across Kenya and the broader African region — and beyond — to exchange knowledge, build skills, and foster collaboration.
+        </p>
+        <p>
+          In an era where data is reshaping how governments design policies, allocate resources, and monitor development outcomes, this conference positions statistics as the essential foundation of trustworthy AI and evidence-based decision-making for sustainable development.
+        </p>
+        <p>
+          The conference directly contributes to <strong>Kenya&apos;s Vision 2030</strong> and the <strong>United Nations Sustainable Development Goals</strong> by advancing data literacy, AI ethics, and capacity building across the continent.
+        </p>
         <figure className="about-photo">
-          <Image src="/images/conference-collaboration.png" alt="Illustrative East African students and researchers sharing ideas" fill sizes="(max-width: 800px) 100vw, 800px" />
-          <figcaption>Illustrative conference photography · Research, learning and collaboration</figcaption>
+          <Image src="/images/conference-collaboration.png" alt="East African researchers collaborating around data and research materials" fill sizes="(max-width: 800px) 100vw, 800px" />
+          <figcaption>Research, learning and collaboration at the heart of the conference</figcaption>
         </figure>
-        <div className="partner-logo-row">
-          {CONFERENCE_PARTNERS.map((partner) => (
-            <div className="partner-logo-card" key={partner.name}>
-              <Image src={partner.src} alt={partner.name} width={160} height={72} />
-              <span>{partner.name}</span>
-            </div>
-          ))}
-        </div>
       </section>
-      <section className="content-section">
+      <section className="content-section about-expectations">
         <div className="section-heading-block">
           <p className="content-eyebrow">What to expect</p>
           <h2>Research, practice and collaboration</h2>
@@ -256,22 +201,36 @@ function AboutContent() {
 
 function ThemesContent() {
   return (
-    <section className="content-section">
-      <div className="theme-grid">
-        {tracks.map((track, index) => (
-          <article className="content-card theme-content-card" key={track.title}>
-            <p className="card-kicker">Sub-theme {String(index + 1).padStart(2, "0")}</p>
-            <h2>{track.title}</h2>
-            <p>{track.description}</p>
-            <ul className="tag-list">
-              {track.tags.map((tag) => <li key={tag}>{tag}</li>)}
-            </ul>
-          </article>
-        ))}
-      </div>
-      <aside className="callout callout-warm">
-        <strong>Cross-cutting focus:</strong> ethics, data governance, fairness, responsible AI, and privacy across all tracks.
-      </aside>
+    <section className="content-section themes-content">
+      <section className="theme-main-theme" aria-labelledby="main-theme-heading">
+        <div className="theme-main-image-wrap" aria-hidden="true">
+          <Image
+            className="theme-main-image"
+            src="/images/conference-campus.png"
+            alt=""
+            fill
+            sizes="(max-width: 800px) 100vw, 1160px"
+          />
+        </div>
+        <p className="theme-main-label">Main theme</p>
+        <h2 id="main-theme-heading">Strengthening Evidence for Sustainable Development through Statistics, Machine Learning and Artificial Intelligence</h2>
+      </section>
+
+      <section className="theme-subthemes" aria-labelledby="subthemes-heading">
+        <header className="theme-subthemes-heading">
+          <p className="content-eyebrow">Areas of focus</p>
+          <h2 id="subthemes-heading">Conference sub-themes</h2>
+        </header>
+        <ol className="subtheme-grid" start={2}>
+          {subThemes.map((subTheme) => (
+            <li className="subtheme-item" key={subTheme.number}>
+              <span className="subtheme-number">{String(subTheme.number).padStart(2, "0")}</span>
+              <h3>{subTheme.title}</h3>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       <p className="content-actions"><Link className="text-link" href="/cfp">Read the call for papers <span aria-hidden="true">→</span></Link></p>
     </section>
   );
@@ -314,7 +273,7 @@ function CallForPapersContent() {
           <h2>Original research contributions</h2>
           <p>The SSK International Conference invites theoretical and applied contributions advancing statistics, machine learning, and AI for sustainable development, from researchers, practitioners, and students in Kenya and internationally.</p>
           <h3>Submission tracks</h3>
-          <ul className="check-list">{tracks.map((track) => <li key={track.title}>{track.title}</li>)}</ul>
+          <ul className="check-list">{subThemes.map((subTheme) => <li key={subTheme.number}>{subTheme.title}</li>)}</ul>
           <a className="conference-btn conference-btn-outline" href="https://portal.sskenya.org/2026-conference-abstract-submission" target="_blank" rel="noreferrer">Check the official portal ↗</a>
         </div>
         <div className="process-list">
@@ -329,18 +288,8 @@ function CallForPapersContent() {
 
 function ProgrammeContent() {
   return (
-    <section className="content-section">
-      <div className="callout callout-blue">Programme outline from the conference planning material. Session details and speakers may be updated by the organizers.</div>
-      <div className="programme-list">
-        {programme.map((day) => (
-          <details className="programme-day" key={day.date}>
-            <summary><span><small>{day.date}</small><strong>{day.title}</strong></span><span className="programme-toggle" aria-hidden="true">+</span></summary>
-            <ol>
-              {day.events.map(([time, title]) => <li key={time + title}><time>{time}</time><span>{title}</span></li>)}
-            </ol>
-          </details>
-        ))}
-      </div>
+    <section className="content-section programme-content">
+      <ScheduleExplorer variant="overview" />
     </section>
   );
 }
@@ -392,20 +341,19 @@ function PartnersContent() {
 function RegisterContent() {
   return (
     <section className="content-section">
-      <p className="section-copy">Full-conference fees cover three-day attendance, conference materials, a delegate pack, and daily meals. Daily rates are available. Accommodation is arranged separately.</p>
+      <p className="section-copy">Choose the registration category that fits you. Full-conference fees include conference materials, a delegate pack, and daily meals. Accommodation is separate.</p>
       <div className="fee-grid">
         {feeOptions.map((fee, index) => (
           <article className={`content-card fee-card${index === 1 ? " fee-card-featured" : ""}`} key={fee.category}>
-            <p className="card-kicker">{fee.category}</p><h2>{fee.fee}</h2><p className="fee-daily">{fee.daily}</p>
+            <div className="fee-card-heading"><p className="card-kicker">Delegate category</p><h2>{fee.category}</h2></div>
+            <p className="fee-price">{fee.fee}</p><p className="fee-daily">{fee.daily}</p>
             <ul className="check-list"><li>Three-day conference access</li><li>Delegate pack and materials</li><li>Daily meals</li><li>Sessions and workshops</li><li>Certificate of participation</li></ul>
             <p className="fee-note">{fee.note}</p>
+            <a className="conference-btn conference-btn-primary fee-register-button" href="https://portal.sskenya.org/2026-conference-registration" target="_blank" rel="noreferrer">Register <span aria-hidden="true">↗</span></a>
           </article>
         ))}
       </div>
-      <div className="callout callout-warm registration-deadline">
-        <div><p className="card-kicker">Registration deadline</p><strong>31 October 2026</strong></div>
-        <a className="conference-btn conference-btn-primary" href="https://portal.sskenya.org/2026-conference-registration" target="_blank" rel="noreferrer">Register through SSK portal ↗</a>
-      </div>
+      <RegistrationDeadlineDialog />
       <article className="content-card accommodation-card">
         <p className="card-kicker">Stay in Embu</p><h2>Recommended accommodation</h2>
         <p>Accommodation is not included in registration. The previous conference information recommends booking directly with hotels in Embu and contacting the secretariat for assistance.</p>

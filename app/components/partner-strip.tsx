@@ -14,9 +14,9 @@ const orderedPartners = displayOrder.flatMap((name) => {
 
 export default function PartnerStrip() {
   return (
-    <section className="partner-strip" aria-label="Conference partners">
+    <section className="partner-strip" aria-label="Conference organizers">
       <div className="conference-container partner-strip-inner">
-        <p className="partner-strip-label">Convened with</p>
+        <p className="partner-strip-label">Jointly organized by</p>
         <ul className="partner-strip-list">
           {orderedPartners.map((partner) => (
             <li key={partner.name}>

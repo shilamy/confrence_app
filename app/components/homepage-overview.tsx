@@ -1,15 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-// Keep this list limited to sponsors whose payment has been confirmed.
-// Add a logo only after the secretariat verifies payment and registration.
 const sponsorRecords: { name: string; logo: string; website?: string; registered: boolean; paymentConfirmed: boolean }[] = [];
 const paymentConfirmedSponsors = sponsorRecords.filter((sponsor) => sponsor.registered && sponsor.paymentConfirmed);
 
 const quickLinks = [
-  ["Explore the themes", "Four tracks spanning statistical ML, AI for development, official statistics, and future skills.", "/themes", "Conference themes"],
-  ["See the programme", "Training, research presentations, Africa Statistics Day, policy dialogue, and awards.", "/programme", "Programme outline"],
-  ["Plan your visit", "Find venue details, travel context, and accommodation guidance for Embu.", "/venue", "Venue information"],
+  ["Explore the themes", "Four tracks spanning statistical ML, AI for development, official statistics, and future skills.", "/themes", "Explore themes"],
+  ["See the programme", "Training, research presentations, Africa Statistics Day, policy dialogue, and awards.", "/programme", "View programme"],
+  ["Plan your visit", "Find venue details, travel context, and accommodation guidance for Embu.", "/venue", "Plan your visit"],
 ];
 
 export default function HomepageOverview() {
@@ -53,7 +51,7 @@ export default function HomepageOverview() {
           </div>
           <div className="home-register-banner">
             <div><p className="content-eyebrow">17–19 November 2026 · University of Embu</p><h2>Join the statistics and data community in Embu</h2></div>
-            <Link className="conference-btn conference-btn-primary" href="/register">Registration and fees <span aria-hidden="true">↗</span></Link>
+            <Link className="conference-btn conference-btn-primary" href="/register">View registration fees <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
       </section>
@@ -66,14 +64,20 @@ export default function HomepageOverview() {
             <p>Support the conference and its student, research, and policy programmes. Contact the secretariat to confirm current opportunities.</p>
             <div className="home-sponsor-actions">
               <Link className="conference-btn conference-btn-primary" href="/sponsors">Explore sponsorship <span aria-hidden="true">↗</span></Link>
-              <Link className="conference-btn conference-btn-outline sponsor-student-button" href="/sponsors#student">Sponsor a Student <span aria-hidden="true">↗</span></Link>
+              <Link className="conference-btn conference-btn-outline" href="/sponsors#student">Sponsor a Student <span aria-hidden="true">↗</span></Link>
             </div>
           </div>
           <div className="confirmed-sponsors">
-            <p className="card-kicker">Confirmed sponsors</p>
-            {paymentConfirmedSponsors.length ? <ul>{paymentConfirmedSponsors.map((sponsor) => <li key={sponsor.name}>
-              {sponsor.website ? <a href={sponsor.website} target="_blank" rel="noreferrer" aria-label={sponsor.name}><Image src={sponsor.logo} alt={sponsor.name} width={180} height={90} /></a> : <Image src={sponsor.logo} alt={sponsor.name} width={180} height={90} />}
-            </li>)}</ul> : <p>Sponsor acknowledgements will appear here after registration and payment are confirmed.</p>}
+            {paymentConfirmedSponsors.length ? <>
+              <p className="card-kicker">Confirmed sponsors</p>
+              <ul>{paymentConfirmedSponsors.map((sponsor) => <li key={sponsor.name}>
+                {sponsor.website ? <a href={sponsor.website} target="_blank" rel="noreferrer" aria-label={sponsor.name}><Image src={sponsor.logo} alt={sponsor.name} width={180} height={90} /></a> : <Image src={sponsor.logo} alt={sponsor.name} width={180} height={90} />}
+              </li>)}</ul>
+            </> : <>
+              <p className="card-kicker">Sponsorship enquiries</p>
+              <p>The published sponsor deadline has passed. Contact the secretariat to ask whether opportunities remain.</p>
+              <a className="text-link" href="mailto:conference@sskenya.org?subject=Sponsorship%20availability">Ask about availability <span aria-hidden="true">→</span></a>
+            </>}
           </div>
         </div>
       </section>
