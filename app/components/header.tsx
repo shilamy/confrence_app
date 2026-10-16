@@ -28,14 +28,12 @@ const navigationGroups = [
     links: [
       { label: "Speakers", href: "/speakers" },
       { label: "Partners", href: "/partners" },
-      { label: "Organizers", href: "/organizers" },
     ],
   },
   {
     label: "Support",
     links: [
       { label: "Become a Sponsor", href: "/sponsors" },
-      { label: "Sponsor a Student", href: "/sponsors#student" },
       { label: "DataThon", href: "/sponsors#datathon" },
     ],
   },
@@ -101,7 +99,7 @@ export default function Navbar() {
       <div className="conference-container site-header-inner">
         <Link className="site-brand" href="/" aria-label="Conference home">
           <span className="site-brand-copy">
-            <strong className="site-brand-title">International Conference</strong>
+            <strong className="site-brand-title">THE 2026 National Statistics Conference</strong>
           </span>
         </Link>
 
@@ -134,7 +132,7 @@ export default function Navbar() {
               <li className="site-nav-mobile-heading">
                 <Link href="/" aria-label="SSK Conference home">
                   <strong>SSK Conference</strong>
-                  <span>International Conference 2026</span>
+                  <span>THE 2026 National Statistics Conference</span>
                 </Link>
               </li>
               <li className="site-nav-home">

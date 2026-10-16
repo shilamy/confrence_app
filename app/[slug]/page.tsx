@@ -18,7 +18,6 @@ const routeTitles: Record<string, string> = {
   contact: "Contact",
   sponsors: "Sponsors",
   register: "Registration",
-  organizers: "Organizers",
   eticket: "E-ticket information",
 };
 

@@ -33,7 +33,6 @@ export default function Footer() {
               ))}
               <li><Link href="/speakers">Speakers</Link></li>
               <li><Link href="/partners">Partners</Link></li>
-              <li><Link href="/organizers">Organizers</Link></li>
             </ul>
           </nav>
 

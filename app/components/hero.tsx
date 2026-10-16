@@ -39,9 +39,9 @@ export default function Hero() {
           </p>
 
           <h1 className="hero-title">
-            Strengthening evidence{" "}
+            Strengthening Evidence for Sustainable Development through Statistics, {" "}
             <br className="hero-title-break" />
-            <span className="hero-title-accent">for sustainable development.</span>
+            <span className="hero-title-accent">Machine Learning and Artificial Intelligence.</span>
           </h1>
 
           <p className="hero-subtitle">

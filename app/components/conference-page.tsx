@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CONFERENCE_PARTNERS } from "../constants/type";
 import ScheduleExplorer from "./schedule-explorer";
 import RegistrationDeadlineDialog from "./registration-deadline-dialog";
+import { DataThonRegistrationDialog, SponsorProcessDialog } from "./sponsor-dialogs";
 
 const subThemes = [
   { number: 2, title: "Assuring Sustainable Water Availability and Safe Sanitation Systems to Achieve the Goals of Agenda 2063." },
@@ -36,39 +37,6 @@ const feeOptions = [
   { category: "International", fee: "USD 150", daily: "USD 70/day", note: "For delegates travelling from outside Kenya." },
 ];
 
-const committees = [
-  {
-    name: "Statistical Society of Kenya",
-    role: "Lead organizer",
-    members: [
-      ["Geofrey Oduwo", "Conference Chair · Chairperson, SSK"],
-      ["Obwoge Frankline Keraro", "Conference Organizer · SSK Regional Coordinator, Eastern Kenya"],
-      ["SSK Secretariat", "Conference coordination"],
-      ["Scientific Committee", "Abstract review and programme design"],
-    ],
-  },
-  {
-    name: "University of Embu",
-    role: "Host institution",
-    members: [
-      ["Dr. Edwine Benson Atitwa", "Chair, Department of Mathematics and Statistics"],
-      ["University scientific committee", "Scientific programme and abstract vetting"],
-      ["Directorate of Research", "Research linkages and proceedings"],
-      ["University representatives", "Media, ICT, events and student affairs"],
-    ],
-  },
-  {
-    name: "Kenya National Bureau of Statistics",
-    role: "Strategic partner",
-    members: [
-      ["Mr. Benjamin Avusevwa", "Director, Statistical Coordination and Methods · Partnership Lead"],
-      ["KNBS technical team", "Technical input and statistical coordination"],
-      ["Africa Statistics Day desk", "Joint celebrations and programme"],
-      ["Participant engagement team", "Knowledge dissemination and outreach"],
-    ],
-  },
-];
-
 const pageTitles: Record<string, { eyebrow: string; title: string; description: string }> = {
   about: {
     eyebrow: "About the Conference",
@@ -86,9 +54,9 @@ const pageTitles: Record<string, { eyebrow: string; title: string; description: 
     description: "Explore the programme by day, then use the schedule finder to search sessions and build a personal itinerary.",
   },
   speakers: {
-    eyebrow: "Invited speakers",
-    title: "Keynote speakers and facilitators",
-    description: "Speakers are listed in the programme only after they confirm their attendance.",
+    eyebrow: "Speaker lineup",
+    title: "Meet the conference speakers",
+    description: "Profiles of confirmed researchers, statisticians, and practitioners will appear here as the lineup is finalized.",
   },
   dates: {
     eyebrow: "Important milestones",
@@ -124,11 +92,6 @@ const pageTitles: Record<string, { eyebrow: string; title: string; description: 
     eyebrow: "Registration",
     title: "Conference registration fees",
     description: "Fees cover three-day attendance, conference materials, delegate pack, and daily meals. Daily rates are also listed; accommodation is separate.",
-  },
-  organizers: {
-    eyebrow: "Organizing team",
-    title: "Conference organizing committees",
-    description: "The conference is jointly organized by SSK, the University of Embu, and the Kenya National Bureau of Statistics.",
   },
   eticket: {
     eyebrow: "Digital access",
@@ -295,19 +258,95 @@ function ProgrammeContent() {
 }
 
 function SpeakersContent() {
-  // Add a speaker here only after attendance has been confirmed by the organizer.
-  const confirmedSpeakers: { name: string; role: string; topic: string }[] = [];
+  const speakerRoles = [
+    {
+      id: "kenyan-keynote",
+      initials: "KS",
+      label: "Keynote speaker",
+      title: "Kenyan statistics leader — TBA",
+      occupation: "Academic or senior statistician",
+      details: "A Kenyan voice advancing statistical science and evidence-led development.",
+      topics: ["Statistics", "AI policy", "Kenya"],
+    },
+    {
+      id: "international-researcher",
+      initials: "IR",
+      label: "Research speaker",
+      title: "International researcher — TBA",
+      occupation: "Machine learning or development data researcher",
+      details: "Research connecting machine learning, responsible AI, and development data.",
+      topics: ["ML research", "Development", "Responsible AI"],
+    },
+    {
+      id: "policy-leader",
+      initials: "PL",
+      label: "Policy speaker",
+      title: "Statistics or policy leader — TBA",
+      occupation: "Government or official statistics leader",
+      details: "A public-sector perspective on trustworthy data, official statistics, and policy.",
+      topics: ["Policy", "Official statistics", "Government"],
+    },
+  ];
+  const confirmedSpeakers: {
+    name: string;
+    occupation: string;
+    details: string;
+    topic: string;
+    image?: string;
+  }[] = [];
 
   return (
     <section className="content-section">
-      <div className="callout callout-blue">Only speakers who have confirmed their attendance will be published in the programme.</div>
-      {confirmedSpeakers.length ? <div className="speaker-grid">
-        {confirmedSpeakers.map((speaker) => (
-          <article className="content-card speaker-card" key={speaker.name}>
-            <p className="card-kicker">Confirmed speaker</p><h2>{speaker.name}</h2><p>{speaker.role}</p><p>{speaker.topic}</p>
-          </article>
-        ))}
-      </div> : <article className="content-card speaker-empty"><h2>Speaker announcements are coming soon</h2><p>Confirmed names and session details will appear here after attendance is verified.</p></article>}
+      <p className="speakers-intro">Explore the expertise shaping the conference conversations. Each profile highlights a speaker’s role, background, and areas of focus.</p>
+      {confirmedSpeakers.length ? (
+        <div className="speaker-grid">
+          {confirmedSpeakers.map((speaker) => (
+            <article className="speaker-card" key={speaker.name}>
+              <div className="speaker-card-portrait">
+                {speaker.image ? (
+                  <Image src={speaker.image} alt={speaker.name} fill sizes="(max-width: 680px) 100vw, (max-width: 1100px) 50vw, 360px" />
+                ) : (
+                  <div className="speaker-card-monogram" aria-hidden="true">
+                    {speaker.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}
+                  </div>
+                )}
+                <span className="speaker-card-confirmed">Confirmed speaker</span>
+              </div>
+              <div className="speaker-card-content">
+                <h2>{speaker.name}</h2>
+                <p className="speaker-card-occupation">{speaker.occupation}</p>
+                <p className="speaker-card-details">{speaker.details}</p>
+                <div className="speaker-card-topic">
+                  <span>Conference focus</span>
+                  <p>{speaker.topic}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className="speaker-role-grid" aria-label="Speaker roles to be announced">
+            {speakerRoles.map((role) => (
+              <article className={`speaker-card speaker-role-card speaker-role-${role.id}`} key={role.id}>
+                <div className="speaker-card-portrait speaker-role-portrait">
+                  <span className="speaker-card-monogram" aria-hidden="true">{role.initials}</span>
+                  <span className="speaker-card-confirmed">{role.label} · TBA</span>
+                </div>
+                <div className="speaker-card-content">
+                  <h2>{role.title}</h2>
+                  <p className="speaker-card-occupation">{role.occupation}</p>
+                  <p className="speaker-card-details">{role.details}</p>
+                  <ul className="speaker-topic-tags" aria-label="Related topics">
+                    {role.topics.map((topic) => <li key={topic}>{topic}</li>)}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="speaker-lineup-note">These are the speaker profiles the programme is building toward. Names and portraits will be added after confirmation.</p>
+        </>
+      )}
       <p className="content-actions">Interested in speaking? <Link className="text-link" href="/contact">Contact the conference team →</Link></p>
     </section>
   );
@@ -366,55 +405,113 @@ function RegisterContent() {
 
 function SponsorsContent() {
   const tiers = [
-    ["Title", "KES 1,500,000", "1 available in the published package"],
-    ["Platinum", "KES 1,000,000", "2 available in the published package"],
-    ["Gold", "KES 500,000", "3 available in the published package"],
-    ["Silver", "KES 250,000", "4 available in the published package"],
-  ];
-  const registrationSteps = [
-    "Email the secretariat with your organization and preferred sponsorship tier.",
-    "The published process says SSK will send a sponsorship agreement and invoice.",
-    "Provide a high-resolution organization logo and a profile of up to 100 words.",
-    "Pay using the bank or M-Pesa details on the official invoice.",
-    "Send names and email addresses for any included delegate passes.",
+    {
+      name: "Title",
+      price: "KES 1,500,000",
+      availability: "1 listed in the published package",
+    },
+    {
+      name: "Platinum",
+      price: "KES 1,000,000",
+      availability: "2 listed in the published package",
+    },
+    {
+      name: "Gold",
+      price: "KES 500,000",
+      availability: "3 listed in the published package",
+    },
+    {
+      name: "Silver",
+      price: "KES 250,000",
+      availability: "4 listed in the published package",
+    },
   ];
   return (
-    <section className="content-section">
-      <div className="callout callout-warm">The published sponsor confirmation deadline was 31 August 2026. Contact SSK to confirm whether any opportunities remain available.</div>
-      <h2>Principal sponsorship</h2>
+    <section className="content-section sponsors-content">
+      <div className="sponsor-action-band">
+        <div>
+          <p className="content-eyebrow">Partner with the conference</p>
+          <h2>Put your organisation at the centre of the conversation.</h2>
+        </div>
+        <div className="sponsor-action-buttons">
+          <a className="conference-btn conference-btn-outline sponsor-prospectus-button" href="https://conference.sskenya.org/#/contact" target="_blank" rel="noreferrer">Request Sponsorship Prospectus <span aria-hidden="true">→</span></a>
+          <a className="conference-btn conference-btn-primary sponsor-register-button" href="https://portal.sskenya.org/2026-conference-sponsorship" target="_blank" rel="noreferrer">Register as a Sponsor <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div className="callout callout-warm sponsor-deadline-note">The published sponsor confirmation deadline was 31 August 2026. Contact SSK to confirm whether any opportunities remain available.</div>
+      <header className="sponsor-tier-heading">
+        <p className="content-eyebrow">Published sponsorship packages</p>
+        <h2>Choose your level of impact</h2>
+      </header>
       <div className="sponsor-tier-grid">
-        {tiers.map(([name, price, availability]) => <article className="content-card sponsor-tier-card" key={name}><p className="card-kicker">{name} sponsor</p><h3>{price}</h3><p>{availability}</p></article>)}
+        {tiers.map((tier) => (
+          <article className={`sponsor-tier-card sponsor-tier-${tier.name.toLowerCase()}`} key={tier.name}>
+            <header className="sponsor-tier-card-heading">
+              <p className="card-kicker">Sponsorship level</p>
+              <h3>{tier.name}</h3>
+            </header>
+            <div className="sponsor-tier-card-body">
+              <p className="sponsor-tier-price">{tier.price}</p>
+              <p className="sponsor-tier-availability">{tier.availability}</p>
+              <p className="sponsor-tier-inclusions">Request the prospectus for package inclusions.</p>
+              <a className="conference-btn conference-btn-primary sponsor-tier-cta" href="https://portal.sskenya.org/2026-conference-sponsorship" target="_blank" rel="noreferrer">Register at {tier.name} <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+        ))}
       </div>
-      <div className="content-two-column sponsor-exhibition">
-        <article className="content-card"><p className="card-kicker">Exhibition</p><h2>Standard booth · KES 50,000</h2><ul className="check-list"><li>Exhibition table, two chairs and branded booth space</li><li>Two exhibitor passes with daily meals</li><li>Programme listing and access to all three days</li></ul></article>
-        <article className="content-card"><p className="card-kicker">Exhibition</p><h2>Premium booth · KES 100,000</h2><ul className="check-list"><li>Larger booth near the plenary entrance</li><li>Three exhibitor passes with daily meals</li><li>Programme logo and a five-minute innovation pitch</li></ul></article>
+      <section className="exhibition-section" aria-labelledby="exhibition-heading">
+        <header className="exhibition-heading">
+          <div>
+            <p className="content-eyebrow">Meet the people behind the data</p>
+            <h2 id="exhibition-heading">Exhibition &amp; Innovation Booths</h2>
+            <p>Showcase products and ideas to statisticians, data scientists, public-sector leaders, academics, and students.</p>
+          </div>
+          <span className="exhibition-capacity">20 booths listed</span>
+        </header>
+        <div className="exhibition-booth-grid">
+          <article className="exhibition-booth-card">
+            <p className="card-kicker">Standard booth</p>
+            <h3>KES 50,000</h3>
+            <ul>
+              <li>Exhibition table, two chairs, and branded booth space</li>
+              <li>Two exhibitor passes with daily meals</li>
+              <li>Company listing in the programme</li>
+              <li>Access to all three conference days</li>
+            </ul>
+          </article>
+          <article className="exhibition-booth-card exhibition-booth-premium">
+            <p className="card-kicker">Premium booth</p>
+            <h3>KES 100,000</h3>
+            <ul>
+              <li>Larger, prime-location booth near the plenary entrance</li>
+              <li>Three exhibitor passes with daily meals</li>
+              <li>Logo on exhibition signage and programme</li>
+              <li>Five-minute product or innovation pitch</li>
+            </ul>
+          </article>
+        </div>
+        <div className="exhibition-footer">
+          <p>Space is limited and allocated first-come, first-served. Title, Platinum, and Gold sponsors receive a complimentary premium booth. Contact the secretariat to confirm availability.</p>
+          <a className="conference-btn conference-btn-primary" href="mailto:conference@sskenya.org?subject=Exhibition%20booth%20reservation">Reserve an Exhibition Booth <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+      <div className="sponsor-process-row">
+        <p>Need the full package details, steps, and deadlines?</p>
+        <SponsorProcessDialog />
       </div>
-      <div className="content-two-column sponsor-exhibition sponsor-related-grid">
-        <article className="content-card" id="student">
-          <p className="card-kicker">Access to opportunity</p><h2>Sponsor a Student</h2>
-          <p>Help a student take part in the conference. Contact the secretariat to discuss a contribution and the student support process.</p>
-          <a className="conference-btn conference-btn-primary sponsor-student-button" href="mailto:conference@sskenya.org?subject=Sponsor%20a%20Student">Sponsor a Student <span aria-hidden="true">↗</span></a>
-        </article>
-        <article className="content-card" id="datathon">
-          <p className="card-kicker">Related programme</p><h2>DataThon sponsorship</h2>
-          <p>Support the conference DataThon as a sponsor or partner. Contact the secretariat for the format, participation details, and available options.</p>
-          <a className="text-link" href="mailto:conference@sskenya.org?subject=DataThon%20sponsorship">Enquire about the DataThon →</a>
-        </article>
-      </div>
-      <div className="content-two-column sponsor-exhibition">
-        <article className="content-card">
-          <p className="card-kicker">Additional opportunities</p><h2>Support a specific programme area</h2>
-          <ul className="check-list"><li>Awards sponsor · KES 100,000</li><li>Workshop track sponsor · KES 150,000 per track</li><li>Meals sponsor · KES 300,000</li><li>Delegate bag sponsor · KES 200,000</li></ul>
-        </article>
-        <article className="content-card">
-          <p className="card-kicker">Published sponsor process</p><h2>How to enquire</h2>
-          <ol className="number-list">{registrationSteps.map((step) => <li key={step}>{step}</li>)}</ol>
-          <p className="fee-note">The published sponsor confirmation deadline was 31 August 2026. Included delegate names were due by 31 October 2026.</p>
-        </article>
-      </div>
+      <section className="datathon-section" id="datathon" aria-labelledby="datathon-heading">
+        <div className="datathon-copy">
+          <p className="content-eyebrow">Build with data</p>
+          <h2 id="datathon-heading">DataThon</h2>
+          <p>Bring your curiosity, data skills, and ideas to a collaborative challenge connected to statistics and sustainable development.</p>
+        </div>
+        <div className="datathon-action">
+          <p>Interested in taking part? Send your details to the secretariat to register your interest.</p>
+          <DataThonRegistrationDialog />
+        </div>
+      </section>
       <div className="callout callout-blue sponsor-contact">
         <p>To ask whether sponsorship or booth opportunities remain, email <a href="mailto:conference@sskenya.org">conference@sskenya.org</a> or call <a href="tel:+254739639425">+254 739 639 425</a>.</p>
-        <a className="conference-btn conference-btn-outline" href="https://portal.sskenya.org/2026-conference-sponsorship" target="_blank" rel="noreferrer">Check the official sponsor portal ↗</a>
       </div>
     </section>
   );
@@ -475,22 +572,6 @@ function ContactContent() {
           </article>
         ))}
       </div>
-      <div className="callout callout-blue">The previous site included a message form connected to a PHP endpoint that is not part of this Next.js project. Email the secretariat directly so your enquiry reaches the team.</div>
-    </section>
-  );
-}
-
-function OrganizersContent() {
-  return (
-    <section className="content-section">
-      <div className="committee-grid">
-        {committees.map((committee) => (
-          <article className="content-card committee-card" key={committee.name}>
-            <p className="card-kicker">{committee.role}</p><h2>{committee.name}</h2>
-            <ul>{committee.members.map(([name, role]) => <li key={name}><strong>{name}</strong><span>{role}</span></li>)}</ul>
-          </article>
-        ))}
-      </div>
     </section>
   );
 }
@@ -525,7 +606,6 @@ export default function ConferencePage({ slug }: { slug: string }) {
     case "contact": content = <ContactContent />; break;
     case "sponsors": content = <SponsorsContent />; break;
     case "register": content = <RegisterContent />; break;
-    case "organizers": content = <OrganizersContent />; break;
     case "eticket": content = <EticketContent />; break;
     default: notFound();
   }
