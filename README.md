@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SSK International Conference 2026 Website
 
-## Getting Started
+The official conference information website for the Statistical Society of Kenya (SSK) International Conference 2026. It helps researchers, statisticians, students, policymakers, partners, and other delegates learn about the event, explore its programme, plan a visit to the University of Embu, and find the official registration and submission portals.
 
-First, run the development server:
+The conference runs **17–19 November 2026** at the **University of Embu, Kenya**. Its theme is *Strengthening Evidence for Sustainable Development through Statistics, Machine Learning, and Artificial Intelligence*. The event is convened by SSK, hosted by the University of Embu, and held in strategic partnership with the Kenya National Bureau of Statistics (KNBS). It also includes Africa Statistics Day celebrations on 18 November 2026.
+
+## Website features
+
+- **Conference homepage:** An editorial hero with a campus video, play/pause control, conference countdown, event details, partner logos, highlights, and links to key information. The partner strip presents KNBS, SSK, and the University of Embu in the agreed order.
+- **Responsive navigation:** A compact mobile menu provides access to conference pages and registration.
+- **Conference information:** Dedicated pages cover the event, themes, call for papers, programme, key dates, venue, speakers, partners, sponsors, organizers, registration fees, contact information, and e-ticket guidance.
+- **Programme explorer:** Browse the programme by day, search sessions by title or time, and save items to a personal plan. Saved sessions are stored in the visitor’s browser on that device.
+- **Venue and travel guidance:** Find information about the University of Embu and plan a visit.
+- **Registration and submissions:** The site presents conference information and links to the official SSK portals for registration, abstracts, and sponsorship. Registration and e-ticket processing are handled by those external portals.
+- **Partner and sponsor information:** The homepage displays the conference partners. Sponsor logos are intended for confirmed sponsors; enquiries can be sent to the conference secretariat.
+- **Accessible interaction:** Interactive elements support keyboard use and follow the visitor’s reduced-motion preference where applicable.
+
+## Pages
+
+| Route | Information |
+| --- | --- |
+| `/` | Homepage, conference overview, countdown, partners, and sponsor information |
+| `/about` | Conference background and what to expect |
+| `/themes` | Main theme and conference sub-themes |
+| `/programme` | Programme outline and schedule preview |
+| `/schedule` | Searchable day-by-day schedule and saved personal plan |
+| `/cfp` | Call for abstracts and papers, submission guidance, and portal link |
+| `/dates` | Conference milestones and deadlines |
+| `/venue` | University of Embu venue and travel information |
+| `/speakers` | Keynote speakers and facilitators |
+| `/partners` | Conference institutions and partner information |
+| `/sponsors` | Sponsorship and exhibition information |
+| `/register` | Registration categories, fees, and official portal link |
+| `/organizers` | Conference organizing committees |
+| `/contact` | Contact information for the conference secretariat |
+| `/eticket` | Delegate e-ticket and gate pass guidance |
+
+## Technology
+
+- [Next.js](https://nextjs.org/) App Router
+- React and TypeScript
+- Tailwind CSS v4 utilities and global CSS for the conference theme and responsive layouts
+- `next/image` for optimized image delivery
+- Headless UI is installed and available for adding accessible component primitives
+
+## Run locally
+
+Install dependencies and start the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the website.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Available scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev    # Start the local development server
+npm run build  # Create a production build
+npm run start  # Serve the production build
+npm run lint   # Run ESLint
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/
+  [slug]/page.tsx                 Shared route for conference information pages
+  components/                     Header, footer, hero, schedule, and page content
+  constants/                      Conference details and programme data
+  schedule/page.tsx               Interactive schedule planner
+  globals.css                     Theme tokens, component styles, and responsive rules
+  page.tsx                        Homepage
+public/
+  images/                         Conference and campus imagery
+  img/logos/                      SSK, KNBS, and University of Embu logos
+  img/partners/                   Partner organization logos
+  media/                          Campus photos and conference video
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Conference details, partner logos, and statistics are maintained in `app/constants/type.ts`. The programme outline is maintained in `app/constants/schedule.ts`. Most conference information routes share content and layout through `app/components/conference-page.tsx`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Content and external services
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The website provides conference information and navigation. Registration, abstract submissions, sponsorship processing, and e-ticket issuance are handled by linked SSK services; this application does not process payments or create tickets. Schedule items saved under **My plan** remain in the visitor’s browser and are not synced to an account.
